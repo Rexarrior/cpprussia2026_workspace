@@ -1,0 +1,2 @@
+[     145ms] [VERBOSE] [DOM] Input elements should have autocomplete attributes (suggested: "current-password"): (More info: https://goo.gl/9p2vKq) %o @ http://localhost/register:0
+[   20028ms] [ERROR] Failed to load resource: the server responded with a status of 422 (Unprocessable Entity) @ http://localhost/api/messaging/v1/channel/message/by-timestamp:0

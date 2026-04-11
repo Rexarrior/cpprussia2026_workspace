@@ -1,0 +1,25 @@
+- generic [ref=e19]:
+  - heading "Messages" [level=2] [ref=e20]
+  - generic [ref=e21]:
+    - generic [ref=e22]: Channel
+    - combobox [ref=e23]:
+      - option "General" [selected]
+      - option "Random"
+  - generic [ref=e24]:
+    - generic [ref=e25]: Message
+    - textbox "Type a message..." [ref=e26]
+  - button "Send" [disabled] [ref=e27]
+  - button "Refresh" [ref=e28] [cursor=pointer]
+  - generic [ref=e29]:
+    - heading "Messages" [level=3] [ref=e30]
+    - table [ref=e31]:
+      - rowgroup [ref=e32]:
+        - row "Time User Message" [ref=e33]:
+          - columnheader "Time" [ref=e34]
+          - columnheader "User" [ref=e35]
+          - columnheader "Message" [ref=e36]
+      - rowgroup [ref=e37]:
+        - row "2026-04-11T23:11:44.572340Z Test User 1 Hello from testuser1!" [ref=e38]:
+          - cell "2026-04-11T23:11:44.572340Z" [ref=e39]
+          - cell "Test User 1" [ref=e40]
+          - cell "Hello from testuser1!" [ref=e41]

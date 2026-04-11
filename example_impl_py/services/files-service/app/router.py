@@ -15,13 +15,13 @@ import uuid
 router = APIRouter(prefix="/v1/file", tags=["files"])
 
 
-def get_current_user(token: str = Header(...)) -> dict:
-    if len(token) != 128:
+def get_current_user(authorization: str = Header(...)) -> dict:
+    if len(authorization) != 128:
         raise HTTPException(
             status_code=401,
             detail={"code": "invalid_token", "message": "Invalid token"},
         )
-    return {"token": token, "login": "unknown", "name": "Unknown User"}
+    return {"token": authorization, "login": "unknown", "name": "Unknown User"}
 
 
 def detect_mime_type(content_base64: str, filename: str) -> str:
@@ -48,9 +48,9 @@ def detect_mime_type(content_base64: str, filename: str) -> str:
 )
 async def upload_file(
     request: V1FileNewRequest,
-    token: str = Header(...),
+    authorization: str = Header(...),
 ):
-    user = get_current_user(token)
+    user = get_current_user(authorization)
 
     file_id = str(uuid.uuid4())
     uri = f"s3://files-bucket/{file_id}"
@@ -91,9 +91,9 @@ async def upload_file(
 )
 async def get_file(
     request: V1FileByUriRequest,
-    token: str = Header(...),
+    authorization: str = Header(...),
 ):
-    user = get_current_user(token)
+    user = get_current_user(authorization)
 
     file = files_db.get(request.uri)
     if not file:

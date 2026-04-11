@@ -1,4 +1,4 @@
-from fastapi import APIRouter, HTTPException, status
+from fastapi import APIRouter, HTTPException, status, Header
 from datetime import datetime, timedelta, timezone
 from app.schemas import (
     V1UserStatusUpdateRequest,
@@ -15,13 +15,13 @@ VALID_STATUS_TYPES = {"online", "away", "busy", "offline"}
 VALID_VISIBILITY = {"public", "private"}
 
 
-def get_current_user(token: str) -> dict:
-    if len(token) != 128:
+def get_current_user(authorization: str = Header(...)) -> dict:
+    if len(authorization) != 128:
         raise HTTPException(
             status_code=401,
             detail={"code": "invalid_token", "message": "Invalid token"},
         )
-    return {"token": token, "login": "unknown", "name": "Unknown User"}
+    return {"token": authorization, "login": "unknown", "name": "Unknown User"}
 
 
 def is_status_expired(target_status: UserStatus) -> bool:
@@ -35,8 +35,10 @@ def is_status_expired(target_status: UserStatus) -> bool:
     response_model=V1UserStatusUpdateResponse,
     responses={400: {"model": V1Error}, 401: {"model": V1Error}},
 )
-async def update_status(request: V1UserStatusUpdateRequest):
-    get_current_user(request.current_user.token)
+async def update_status(
+    request: V1UserStatusUpdateRequest, authorization: str = Header(...)
+):
+    get_current_user(authorization)
 
     status_type = request.status.get("status_type")
     if status_type and status_type not in VALID_STATUS_TYPES:
@@ -88,8 +90,10 @@ async def update_status(request: V1UserStatusUpdateRequest):
         404: {"model": V1Error},
     },
 )
-async def get_status_by_login(request: V1UserStatusByLoginRequest):
-    get_current_user(request.current_user.token)
+async def get_status_by_login(
+    request: V1UserStatusByLoginRequest, authorization: str = Header(...)
+):
+    get_current_user(authorization)
 
     target_status = statuses_db.get(request.login)
 

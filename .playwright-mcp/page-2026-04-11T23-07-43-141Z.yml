@@ -1,0 +1,23 @@
+- generic [ref=e5]:
+  - heading "Register" [level=2] [ref=e6]
+  - generic [ref=e7]:
+    - generic [ref=e8]:
+      - generic [ref=e9]: Login
+      - textbox [ref=e10]: user2
+    - generic [ref=e11]:
+      - generic [ref=e12]: Name
+      - textbox [ref=e13]: User Two
+    - generic [ref=e14]:
+      - generic [ref=e15]: Email
+      - textbox [ref=e16]: user2@example.com
+    - generic [ref=e17]:
+      - generic [ref=e18]: Phone
+      - textbox [ref=e19]: "+9876543210"
+    - generic [ref=e20]:
+      - generic [ref=e21]: Password
+      - textbox [active] [ref=e22]: password123
+    - button "Register" [ref=e23] [cursor=pointer]
+  - paragraph [ref=e24]:
+    - text: Already have an account?
+    - link "Login" [ref=e25] [cursor=pointer]:
+      - /url: /login

@@ -1,0 +1,29 @@
+- generic [ref=e3]:
+  - navigation [ref=e4]:
+    - generic [ref=e5]: Min Messenger
+    - generic [ref=e6]:
+      - link "Messages" [ref=e7] [cursor=pointer]:
+        - /url: /messages
+      - link "Notifications" [ref=e8] [cursor=pointer]:
+        - /url: /notifications
+      - link "Files" [ref=e9] [cursor=pointer]:
+        - /url: /files
+      - link "Reactions" [ref=e10] [cursor=pointer]:
+        - /url: /reactions
+      - link "Status" [ref=e11] [cursor=pointer]:
+        - /url: /status
+      - button "Logout (testuser1)" [ref=e12] [cursor=pointer]
+  - generic [ref=e14]:
+    - heading "Login" [level=2] [ref=e15]
+    - generic [ref=e16]:
+      - generic [ref=e17]:
+        - generic [ref=e18]: Login
+        - textbox [ref=e19]
+      - generic [ref=e20]:
+        - generic [ref=e21]: Password
+        - textbox [ref=e22]
+      - button "Login" [ref=e23] [cursor=pointer]
+    - paragraph [ref=e24]:
+      - text: Don't have an account?
+      - link "Register" [ref=e25] [cursor=pointer]:
+        - /url: /register

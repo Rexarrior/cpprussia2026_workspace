@@ -1,0 +1,13 @@
+- generic [ref=e5]:
+  - heading "Messages" [level=2] [ref=e6]
+  - generic [ref=e7]:
+    - generic [ref=e8]: Channel
+    - combobox [ref=e9]:
+      - option "General" [selected]
+      - option "Random"
+  - generic [ref=e10]:
+    - generic [ref=e11]: Message
+    - textbox "Type a message..." [ref=e12]
+  - button "Send" [disabled] [ref=e13]
+  - button "Refresh" [ref=e14] [cursor=pointer]
+  - generic [ref=e15]: Failed to load messages

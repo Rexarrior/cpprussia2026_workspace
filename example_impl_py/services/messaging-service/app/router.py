@@ -15,14 +15,14 @@ from app.models import channels_db, messages_db, generate_message_id
 router = APIRouter(prefix="/v1/channel", tags=["messaging"])
 
 
-def get_current_user(token: str = Header(...)) -> dict:
+def get_current_user(authorization: str = Header(...)) -> dict:
     """Validate token and return user info. In production, call auth-service."""
-    if len(token) != 128:
+    if len(authorization) != 128:
         raise HTTPException(
             status_code=401,
             detail={"code": "invalid_token", "message": "Invalid token"},
         )
-    return {"token": token, "login": "unknown", "name": "Unknown User"}
+    return {"token": authorization, "login": "unknown", "name": "Unknown User"}
 
 
 @router.post(
@@ -32,9 +32,9 @@ def get_current_user(token: str = Header(...)) -> dict:
 )
 async def get_messages_by_timestamp(
     request: V1ChannelMessageByTimestampRequest,
-    token: str = Header(...),
+    authorization: str = Header(...),
 ):
-    user = get_current_user(token)
+    user = get_current_user(authorization)
 
     if request.channel_id not in channels_db:
         raise HTTPException(
@@ -72,9 +72,9 @@ async def get_messages_by_timestamp(
 )
 async def create_message(
     request: V1ChannelMessageNewRequest,
-    token: str = Header(...),
+    authorization: str = Header(...),
 ):
-    user = get_current_user(token)
+    user = get_current_user(authorization)
 
     if request.channel_id not in channels_db:
         raise HTTPException(

@@ -13,13 +13,13 @@ from app.models import notifications_db
 router = APIRouter(prefix="/v1/channel/notification", tags=["notifications"])
 
 
-def get_current_user(token: str = Header(...)) -> dict:
-    if len(token) != 128:
+def get_current_user(authorization: str = Header(...)) -> dict:
+    if len(authorization) != 128:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail={"code": "invalid_token", "message": "Invalid token"},
         )
-    return {"token": token, "login": "unknown", "name": "Unknown User"}
+    return {"token": authorization, "login": "unknown", "name": "Unknown User"}
 
 
 @router.post(
@@ -29,9 +29,9 @@ def get_current_user(token: str = Header(...)) -> dict:
 )
 async def list_notifications(
     request: V1ChannelNotificationListRequest,
-    token: str = Header(...),
+    authorization: str = Header(...),
 ):
-    user = get_current_user(token)
+    user = get_current_user(authorization)
 
     user_notifications = [
         V1NotificationStatus(message_id=n.message_id, read=n.read)
@@ -50,9 +50,9 @@ async def list_notifications(
 )
 async def create_notification(
     request: V1ChannelNotificationNewRequest,
-    token: str = Header(...),
+    authorization: str = Header(...),
 ):
-    user = get_current_user(token)
+    user = get_current_user(authorization)
 
     notification_id = str(uuid.uuid4())
     from app.models import Notification

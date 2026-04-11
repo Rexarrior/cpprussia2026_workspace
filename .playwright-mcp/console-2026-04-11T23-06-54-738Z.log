@@ -1,0 +1,3 @@
+[      63ms] [VERBOSE] [DOM] Input elements should have autocomplete attributes (suggested: "current-password"): (More info: https://goo.gl/9p2vKq) %o @ http://localhost/register:0
+[   32122ms] [VERBOSE] [DOM] Input elements should have autocomplete attributes (suggested: "current-password"): (More info: https://goo.gl/9p2vKq) %o @ http://localhost/register:0
+[   64459ms] [LOG] {"current_user":{"token":"4a634b44941e4b59aab0be2243e1839fb39fd9c5f4c74dc1b27601f6fc4d5a4105b58b6c49ea45d68dcf11dc5b8711a278e504097c014791b507384e88719258","login":"user2","name":"User Two"}} @ :0

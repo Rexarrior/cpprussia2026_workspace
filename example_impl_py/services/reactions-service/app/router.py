@@ -15,13 +15,13 @@ router = APIRouter(prefix="/v1/like", tags=["reactions"])
 VALID_ANIMATIONS = {"like", "dislike", "heart", "fire", "okay", "LOL", "smile"}
 
 
-def get_current_user(token: str = Header(...)) -> dict:
-    if len(token) != 128:
+def get_current_user(authorization: str = Header(...)) -> dict:
+    if len(authorization) != 128:
         raise HTTPException(
             status_code=401,
             detail={"code": "invalid_token", "message": "Invalid token"},
         )
-    return {"token": token, "login": "unknown", "name": "Unknown User"}
+    return {"token": authorization, "login": "unknown", "name": "Unknown User"}
 
 
 @router.post(
@@ -31,9 +31,9 @@ def get_current_user(token: str = Header(...)) -> dict:
 )
 async def trigger_reaction(
     request: V1LikeTriggerRequest,
-    token: str = Header(...),
+    authorization: str = Header(...),
 ):
-    user = get_current_user(token)
+    user = get_current_user(authorization)
 
     if request.animation not in VALID_ANIMATIONS:
         raise HTTPException(
@@ -79,9 +79,9 @@ async def trigger_reaction(
 async def get_reactions(
     channel_id: int = Path(...),
     message_id: int = Path(...),
-    token: str = Header(...),
+    authorization: str = Header(...),
 ):
-    user = get_current_user(token)
+    user = get_current_user(authorization)
 
     animation_counts: Dict[str, List[str]] = defaultdict(list)
 
