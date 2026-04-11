@@ -1,0 +1,73 @@
+######################################################################################################################
+#
+# Status Service API
+#
+######################################################################################################################
+components:
+    schemas:
+        V1Login:
+            description: Unique user ID in the system
+            type: string
+            minLength: 3
+
+        V1CurrentUser:
+            description: Current user information, including authorization token if authorized (empty otherwise)
+            type: object
+            additionalProperties: false
+            required:
+              - login
+              - name
+            properties:
+                token:
+                    type: string
+                    minLength: 128
+                    maxLength: 128
+                login:
+                    $ref: '#/components/schemas/V1Login'
+                name:
+                    description: Human readable name, if any
+                    type: string
+
+        V1UserStatus:
+            description: Key-values of arbitrary types (in other words, just JSON without a schema)
+            type: object
+            additionalProperties: true
+
+        # POST /v1/user/status/update
+        V1UserStatusUpdateRequest:
+            type: object
+            additionalProperties: false
+            required:
+              - current_user
+              - status
+            properties:
+                current_user:
+                    $ref: '#/components/schemas/V1CurrentUser'
+                status:
+                    $ref: '#/components/schemas/V1UserStatus'
+        V1UserStatusUpdateResponse:
+            type: object
+            additionalProperties: false
+            properties: {}
+
+        # POST /v1/user/status/by-login
+        V1UserStatusByLoginRequest:
+            type: object
+            additionalProperties: false
+            required:
+              - current_user
+              - login
+            properties:
+                current_user:
+                    $ref: '#/components/schemas/V1CurrentUser'
+                login:
+                    $ref: '#/components/schemas/V1Login'
+
+        V1UserStatusByLoginResponse:
+            type: object
+            additionalProperties: false
+            required:
+              - status
+            properties:
+                status:
+                    $ref: '#/components/schemas/V1UserStatus'

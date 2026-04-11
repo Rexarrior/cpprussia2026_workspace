@@ -1,0 +1,112 @@
+######################################################################################################################
+#
+# Auth Service API
+#
+######################################################################################################################
+components:
+    schemas:
+        V1Login:
+            description: Unique user ID in the system
+            type: string
+            minLength: 3
+
+        V1CurrentUser:
+            description: Current user information, including authorization token if authorized (empty otherwise)
+            type: object
+            additionalProperties: false
+            required:
+              - login
+              - name
+            properties:
+                token:
+                    type: string
+                    minLength: 128
+                    maxLength: 128
+                login:
+                    $ref: '#/components/schemas/V1Login'
+                name:
+                    description: Human readable name, if any
+                    type: string
+
+        V1Error:
+            description: Structure to report any error.
+            type: object
+            additionalProperties: false
+            required:
+              - code
+              - message
+            properties:
+                code:
+                    description: machine_readable_error_code
+                    type: string
+                message:
+                    description: Human readable message
+                    type: string
+                details:
+                    description: Any additional info
+                    type: object
+                    additionalProperties: true
+                    properties: {}
+
+        # POST /v1/user/registration
+        V1UserRegistrationRequest:
+            description: |
+                Registration scenario:
+
+                User sends `POST /v1/user/registration` request with this object in body. If the registration is
+                successful, then the HTTP 200 is returned with V1UserRegistrationResponse object in response body.
+            type: object
+            additionalProperties: false
+            required:
+              - login
+              - password
+              - name
+              - email
+              - phone
+            properties:
+                login:
+                    $ref: '#/components/schemas/V1Login'
+                name:
+                    type: string
+                    minLength: 1
+                email:
+                    type: string
+                    minLength: 3
+                phone:
+                    type: string
+                    minLength: 3
+                password:
+                    type: string
+                    minLength: 6
+
+        V1UserRegistrationResponse:
+            $ref: '#/components/schemas/V1UserAuthorizationResponse'
+
+        # POST /v1/user/authorization
+        V1UserAuthorizationRequest:
+            description: |
+                Authorization scenario:
+
+                User sends `POST /v1/user/authorization` request with this object in body. If the authorization is
+                successful (the user previously registered), then the HTTP 200 is returned with
+                V1UserAuthorizationResponse object in response body.
+            type: object
+            additionalProperties: false
+            required:
+              - login
+              - password
+            properties:
+                login:
+                    $ref: '#/components/schemas/V1Login'
+                password:
+                    type: string
+                    minLength: 6
+
+        V1UserAuthorizationResponse:
+            type: object
+            additionalProperties: false
+            required:
+              - current_user
+            properties:
+                current_user:
+                    $ref: '#/components/schemas/V1CurrentUser'

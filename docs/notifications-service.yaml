@@ -1,0 +1,90 @@
+######################################################################################################################
+#
+# Notifications Service API
+#
+######################################################################################################################
+components:
+    schemas:
+        V1ChannelId:
+            description: |
+                Channel ID in the system. There is no need to explicitly create channel, all the IDs already exist.
+            type: integer
+            format: int64
+
+        V1MessageId:
+            description: Unique message ID for a specific channel
+            type: integer
+            format: int64
+
+        V1Login:
+            description: Unique user ID in the system
+            type: string
+            minLength: 3
+
+        V1CurrentUser:
+            description: Current user information, including authorization token if authorized (empty otherwise)
+            type: object
+            additionalProperties: false
+            required:
+              - login
+              - name
+            properties:
+                token:
+                    type: string
+                    minLength: 128
+                    maxLength: 128
+                login:
+                    $ref: '#/components/schemas/V1Login'
+                name:
+                    description: Human readable name, if any
+                    type: string
+
+        # POST /v1/channel/notification/list
+        V1ChannelNotificationListRequest:
+            type: object
+            additionalProperties: false
+            required:
+              - current_user
+              - channel_id
+            properties:
+                current_user:
+                    $ref: '#/components/schemas/V1CurrentUser'
+                channel_id:
+                    $ref: '#/components/schemas/V1ChannelId'
+
+        V1ChannelNotificationListResponse:
+            type: object
+            additionalProperties: false
+            required:
+              - notifications
+            properties:
+                notifications:
+                    description: Array of message IDs where current_user was notified
+                    type: array
+                    items:
+                        type: integer
+                        format: int64
+
+        # POST /v1/channel/notification/new
+        V1ChannelNotificationNewRequest:
+            description: Notify other user that message requires his attention.
+            type: object
+            additionalProperties: false
+            required:
+              - current_user
+              - channel_id
+              - message_id
+            properties:
+                current_user:
+                    $ref: '#/components/schemas/V1CurrentUser'
+                channel_id:
+                    $ref: '#/components/schemas/V1ChannelId'
+                message_id:
+                    $ref: '#/components/schemas/V1MessageId'
+                other_user_login:
+                    $ref: '#/components/schemas/V1Login'
+
+        V1ChannelNotificationNewResponse:
+            type: object
+            additionalProperties: false
+            properties: {}

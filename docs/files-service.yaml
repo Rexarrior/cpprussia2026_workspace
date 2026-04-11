@@ -1,0 +1,80 @@
+######################################################################################################################
+#
+# Files Service API
+#
+######################################################################################################################
+components:
+    schemas:
+        V1Login:
+            description: Unique user ID in the system
+            type: string
+            minLength: 3
+
+        V1CurrentUser:
+            description: Current user information, including authorization token if authorized (empty otherwise)
+            type: object
+            additionalProperties: false
+            required:
+              - login
+              - name
+            properties:
+                token:
+                    type: string
+                    minLength: 128
+                    maxLength: 128
+                login:
+                    $ref: '#/components/schemas/V1Login'
+                name:
+                    description: Human readable name, if any
+                    type: string
+
+        V1File:
+            type: object
+            additionalProperties: false
+            required:
+              - login
+              - filename
+              - content
+            properties:
+                login:
+                    $ref: '#/components/schemas/V1Login'
+                filename:
+                    type: string
+                    minLength: 3
+                    maxLength: 256
+                content:
+                    type: string
+
+        # POST /v1/file/new
+        V1FileNewRequest:
+            $ref: '#/components/schemas/V1File'
+
+        V1FileNewResponse:
+            type: object
+            additionalProperties: false
+            required:
+              - current_user
+              - uri
+            properties:
+                current_user:
+                    $ref: '#/components/schemas/V1CurrentUser'
+                uri:
+                    type: string
+                    minLength: 3
+
+        # POST /v1/file/by-uri
+        V1FileByUriRequest:
+            type: object
+            additionalProperties: false
+            required:
+              - current_user
+              - uri
+            properties:
+                current_user:
+                    $ref: '#/components/schemas/V1CurrentUser'
+                uri:
+                    type: string
+                    minLength: 3
+
+        V1FileByUriResponse:
+            $ref: '#/components/schemas/V1File'

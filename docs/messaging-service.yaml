@@ -1,0 +1,108 @@
+######################################################################################################################
+#
+# Messaging Service API
+#
+######################################################################################################################
+components:
+    schemas:
+        V1ChannelId:
+            description: |
+                Channel ID in the system. There is no need to explicitly create channel, all the IDs already exist.
+            type: integer
+            format: int64
+
+        V1MessageId:
+            description: Unique message ID for a specific channel
+            type: integer
+            format: int64
+
+        V1CurrentUser:
+            description: Current user information, including authorization token if authorized (empty otherwise)
+            type: object
+            additionalProperties: false
+            required:
+              - login
+              - name
+            properties:
+                token:
+                    type: string
+                    minLength: 128
+                    maxLength: 128
+                login:
+                    type: string
+                    minLength: 3
+                name:
+                    description: Human readable name, if any
+                    type: string
+
+        V1ChannelMessage:
+            type: object
+            additionalProperties: false
+            required:
+              - current_user
+              - id
+              - timestamp
+              - message
+            properties:
+                current_user:
+                    $ref: '#/components/schemas/V1CurrentUser'
+                id:
+                    type: integer
+                    format: int64
+                timestamp:
+                    type: string
+                message:
+                    type: string
+                    minLength: 1
+
+        # POST /v1/channel/message/by-timestamp
+        V1ChannelMessageByTimestampRequest:
+            type: object
+            additionalProperties: false
+            required:
+              - channel_id
+              - from
+            properties:
+                channel_id:
+                    $ref: '#/components/schemas/V1ChannelId'
+                from:
+                    type: string
+                to:
+                    type: string
+
+        V1ChannelMessageByTimestampResponse:
+            type: object
+            additionalProperties: false
+            required:
+              - messages
+            properties:
+                messages:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/V1ChannelMessage'
+
+        # POST /v1/channel/message/new
+        V1ChannelMessageNewRequest:
+            type: object
+            additionalProperties: false
+            required:
+              - current_user
+              - channel_id
+              - message
+            properties:
+                current_user:
+                    $ref: '#/components/schemas/V1CurrentUser'
+                channel_id:
+                    $ref: '#/components/schemas/V1ChannelId'
+                message:
+                    type: string
+                    minLength: 1
+
+        V1ChannelMessageNewResponse:
+            type: object
+            additionalProperties: false
+            required:
+              - message_id
+            properties:
+                message_id:
+                    $ref: '#/components/schemas/V1MessageId'
