@@ -11,15 +11,59 @@
 | Метод | Endpoint | Описание |
 |-------|----------|----------|
 | POST | /v1/like/trigger | Добавить/убрать реакцию |
+| GET | /v1/like/{channel_id}/{message_id} | Получить все реакции на сообщение |
 
 ## Схема данных
 
-- **V1LikeTriggerRequest** — current_user, idempotency_token, channel_id, message_id, animation
-- **animation** — enum: like, dislike, heart, shit, okay, LOL, smile
+### Enums
+
+**V1Animation** — тип анимации:
+- `like` — лайк
+- `dislike` — дизлайк
+- `heart` — сердце
+- `fire` — огонь
+- `okay` — окей
+- `LOL` — смех
+- `smile` — улыбка
+
+### Request/Response
+
+**V1LikeTriggerRequest** — запрос на toggle реакции:
+- `current_user` — информация о пользователе
+- `idempotency_token` — токен для идемпотентности (16-256 символов)
+- `channel_id` — ID канала
+- `message_id` — ID сообщения
+- `animation` — тип анимации
+
+**V1LikeTriggerResponse** — ответ после toggle:
+- `action` — результат: `added` | `removed`
+- `current_user_reaction` — текущая анимация пользователя на этом сообщении (null если нет)
+
+**V1GetReactionsResponse** — список реакций:
+- `reactions` — массив записей с `user` и `animation`
+
+## Idempotency Token
+
+Механизм toggle с idempotency_token:
+
+1. Если токен используется впервые — выполняется toggle (добавление или удаление в зависимости от текущего состояния)
+2. Если токен уже использовался для того же user+channel+message+animation:
+   - Возвращается текущее состояние **без изменений**
+   - Это позволяет безопасно повторять запросы
+
+## HTTP Status Codes
+
+| Код | Описание |
+|-----|----------|
+| 200 | Успех |
+| 400 | Некорректный запрос |
+| 401 | Неавторизован |
+| 404 | Сообщение не найдено |
+| 409 | Конфликт (idempotency token conflict) |
 
 ## Потенциальные проблемы
 
-- Нет response — непонятно как получить текущие реакции
-- idempotency_token для toggle (неясно как работает remove)
-- "shit" как название анимации странно для production
-- Не возвращает текущее состояние после toggle
+- [x] Добавлен response с состоянием после toggle
+- [x] Объяснён механизм idempotency_token
+- [x] Заменён "shit" на "fire"
+- [x] Добавлен endpoint для получения реакций
