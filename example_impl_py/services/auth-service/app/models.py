@@ -27,4 +27,10 @@ def verify_password(password: str, password_hash: str) -> bool:
 
 
 def generate_token() -> str:
-    return str(uuid.uuid4()).replace("-", "") + str(uuid.uuid4()).replace("-", "")
+    # 4 UUIDs = 32*4 = 128 hex characters
+    return (
+        str(uuid.uuid4()).replace("-", "")
+        + str(uuid.uuid4()).replace("-", "")
+        + str(uuid.uuid4()).replace("-", "")
+        + str(uuid.uuid4()).replace("-", "")
+    )

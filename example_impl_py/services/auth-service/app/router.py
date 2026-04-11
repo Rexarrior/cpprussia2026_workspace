@@ -5,6 +5,7 @@ from app.schemas import (
     V1UserAuthorizationResponse,
     V1Error,
     V1CurrentUser,
+    V1AuthorizedUser,
 )
 from app.models import (
     users_db,
