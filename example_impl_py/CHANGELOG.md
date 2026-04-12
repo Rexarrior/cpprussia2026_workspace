@@ -16,6 +16,55 @@ All notable changes to the C++ Russia userver workshop materials.
 - `docs/tmp/*-audit.md` - Initial audit reports for all 6 services
 - `docs/tmp/*-audit-v2.md` - Re-audit reports after fixes
 
+#### Telegram-like Messenger UI (2026-04-13)
+- Pinia stores: auth, chats, messages, status, reactions
+- 8 Vue components: ChatList, ChatListItem, MessageWindow, MessageBubble, MessageInput, StatusIndicator, ReactionBar, MessengerLayout
+- Vue Router with lazy loading and navigation guard
+- E2E tests for messenger (10 tests, 6 passing)
+- Unit tests for stores (Vitest)
+
+### Changed
+
+#### API Improvements (based on audit)
+- Added proper OpenAPI `paths` sections to all service specifications
+- Added HTTP status codes (200, 400, 401, 403, 404, 409, 500) to all endpoints
+- Added `V1Error` response schemas to all endpoints
+- Fixed `other_user_login` to be required in notifications service
+- Replaced inappropriate enum value `"shit"` with `"fire"` in reactions service
+- Added pagination support (`next_cursor`, `has_more`) to messaging service
+- Added `notification_id` to notifications response
+- Added `V1LikeTriggerResponse` with `action` and `current_user_reaction`
+- Added GET endpoint for retrieving reactions
+- Added status types (online, away, busy, offline) and visibility (public, private)
+- Added base64 format specification for file content
+- Added timestamp format (date-time) specification
+
+---
+
+## [2026-04-12]
+
+### Added
+
+#### Telegram-like Messenger UI (`frontend/src/`)
+- `src/stores/` - Pinia stores for state management
+  - `auth.js` - Authentication state
+  - `chats.js` - Chat list management
+  - `messages.js` - Messages with polling support
+  - `status.js` - User status management
+  - `reactions.js` - Message reactions
+- `src/components/messenger/` - Messenger UI components
+  - `ChatList.vue` - Sidebar with chat list
+  - `ChatListItem.vue` - Individual chat item
+  - `MessageWindow.vue` - Message display area
+  - `MessageBubble.vue` - Message bubble component
+  - `MessageInput.vue` - Message input textarea
+  - `StatusIndicator.vue` - User status dot
+  - `ReactionBar.vue` - Hover reaction picker
+  - `MessengerLayout.vue` - Main layout (sidebar + messages)
+- `src/views/Messenger.vue` - Messenger route view
+- `tests/e2e/messenger.spec.js` - Playwright E2E tests
+- `tests/unit/stores/` - Vitest unit tests
+
 ### Changed
 
 #### API Improvements (based on audit)
