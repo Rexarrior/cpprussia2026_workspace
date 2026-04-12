@@ -1,23 +1,34 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import Login from '../views/Login.vue'
-import Register from '../views/Register.vue'
-import Messages from '../views/Messages.vue'
-import Notifications from '../views/Notifications.vue'
-import Files from '../views/Files.vue'
-import Reactions from '../views/Reactions.vue'
-import Status from '../views/Status.vue'
+
+const protectedRoutes = ['/messages', '/notifications', '/files', '/reactions', '/status', '/messenger']
 
 const router = createRouter({
   history: createWebHistory(),
   routes: [
-    { path: '/login', component: Login },
-    { path: '/register', component: Register },
-    { path: '/messages', component: Messages },
-    { path: '/notifications', component: Notifications },
-    { path: '/files', component: Files },
-    { path: '/reactions', component: Reactions },
-    { path: '/status', component: Status }
+    { path: '/', redirect: '/login' },
+    { path: '/login', component: () => import('./views/Login.vue') },
+    { path: '/register', component: () => import('./views/Register.vue') },
+    { path: '/messages', component: () => import('./views/Messages.vue') },
+    { path: '/notifications', component: () => import('./views/Notifications.vue') },
+    { path: '/files', component: () => import('./views/Files.vue') },
+    { path: '/reactions', component: () => import('./views/Reactions.vue') },
+    { path: '/status', component: () => import('./views/Status.vue') },
+    { path: '/messenger', component: () => import('./views/Messenger.vue') },
   ]
+})
+
+// Navigation guard for authentication
+router.beforeEach((to, from, next) => {
+  const token = localStorage.getItem('token')
+  const isProtectedRoute = protectedRoutes.includes(to.path)
+  
+  if (isProtectedRoute && !token) {
+    next('/login')
+  } else if ((to.path === '/login' || to.path === '/register') && token) {
+    next('/messages')
+  } else {
+    next()
+  }
 })
 
 export default router

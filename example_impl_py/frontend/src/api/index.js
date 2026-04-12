@@ -27,8 +27,9 @@ export const messagingApi = {
   sendMessage(data) {
     return apiClient.post('/messaging/v1/channel/message/new', data)
   },
-  getMessages(channelId, from, to) {
+  getMessages(channelId, from, to, currentUser) {
     return apiClient.post('/messaging/v1/channel/message/by-timestamp', {
+      current_user: currentUser,
       channel_id: channelId,
       from,
       to,

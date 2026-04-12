@@ -50,8 +50,9 @@
 <script setup>
 import { ref } from 'vue'
 import { reactionsApi } from '../api'
-import { currentUser } from '../main'
+import { useAuthStore } from '../stores/auth'
 
+const authStore = useAuthStore()
 const channelId = ref(1)
 const messageId = ref(1)
 const animation = ref('like')
@@ -60,7 +61,7 @@ const error = ref('')
 const result = ref('')
 const reactions = ref([])
 
-const user = { token: currentUser.token, login: currentUser.login, name: currentUser.name }
+const user = { token: authStore.currentUser.token, login: authStore.currentUser.login, name: authStore.currentUser.name }
 
 function generateToken() {
   return Math.random().toString(36).substring(2) + Date.now().toString(36)

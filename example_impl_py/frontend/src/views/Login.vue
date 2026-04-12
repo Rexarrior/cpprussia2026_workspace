@@ -23,9 +23,10 @@
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { authApi } from '../api'
-import { setCurrentUser } from '../main'
+import { useAuthStore } from '../stores/auth'
 
 const router = useRouter()
+const authStore = useAuthStore()
 const form = ref({ login: '', password: '' })
 const error = ref('')
 const loading = ref(false)
@@ -36,7 +37,7 @@ async function login() {
   try {
     const response = await authApi.login(form.value)
     const user = response.data.current_user
-    setCurrentUser(user)
+    authStore.setCurrentUser(user)
     router.push('/messages')
   } catch (e) {
     error.value = e.response?.data?.detail?.message || 'Login failed'

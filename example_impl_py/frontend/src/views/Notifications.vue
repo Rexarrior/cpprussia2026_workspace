@@ -40,8 +40,9 @@
 <script setup>
 import { ref, onMounted } from 'vue'
 import { notificationsApi } from '../api'
-import { currentUser } from '../main'
+import { useAuthStore } from '../stores/auth'
 
+const authStore = useAuthStore()
 const selectedChannel = ref(1)
 const messageId = ref('')
 const notifyUser = ref('')
@@ -49,7 +50,7 @@ const notifications = ref([])
 const error = ref('')
 const successMsg = ref('')
 
-const user = { token: currentUser.token, login: currentUser.login, name: currentUser.name }
+const user = { token: authStore.currentUser.token, login: authStore.currentUser.login, name: authStore.currentUser.name }
 
 async function loadNotifications() {
   error.value = ''

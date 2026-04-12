@@ -36,9 +36,10 @@
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { authApi } from '../api'
-import { setCurrentUser } from '../main'
+import { useAuthStore } from '../stores/auth'
 
 const router = useRouter()
+const authStore = useAuthStore()
 const form = ref({ login: '', name: '', email: '', phone: '', password: '' })
 const error = ref('')
 const success = ref(false)
@@ -50,7 +51,7 @@ async function register() {
   try {
     const response = await authApi.register(form.value)
     const user = response.data.current_user
-    setCurrentUser(user)
+    authStore.setCurrentUser(user)
     success.value = true
     setTimeout(() => router.push('/messages'), 1500)
   } catch (e) {

@@ -36,14 +36,15 @@
 <script setup>
 import { ref, onMounted } from 'vue'
 import { messagingApi, notificationsApi } from '../api'
-import { currentUser } from '../main'
+import { useAuthStore } from '../stores/auth'
 
+const authStore = useAuthStore()
 const selectedChannel = ref(1)
 const newMessage = ref('')
 const messages = ref([])
 const error = ref('')
 
-const user = { token: currentUser.token, login: currentUser.login, name: currentUser.name }
+const user = { token: authStore.currentUser.token, login: authStore.currentUser.login, name: authStore.currentUser.name }
 
 async function loadMessages() {
   error.value = ''

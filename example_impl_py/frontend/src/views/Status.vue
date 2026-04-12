@@ -50,8 +50,9 @@
 <script setup>
 import { ref } from 'vue'
 import { statusApi } from '../api'
-import { currentUser } from '../main'
+import { useAuthStore } from '../stores/auth'
 
+const authStore = useAuthStore()
 const statusType = ref('online')
 const statusMessage = ref('')
 const visibility = ref('public')
@@ -61,7 +62,7 @@ const successMsg = ref('')
 const lookupLogin = ref('')
 const lookupResult = ref(null)
 
-const user = { token: currentUser.token, login: currentUser.login, name: currentUser.name }
+const user = { token: authStore.currentUser.token, login: authStore.currentUser.login, name: authStore.currentUser.name }
 
 async function updateStatus() {
   error.value = ''

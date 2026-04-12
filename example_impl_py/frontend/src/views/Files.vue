@@ -37,15 +37,16 @@
 <script setup>
 import { ref } from 'vue'
 import { filesApi } from '../api'
-import { currentUser } from '../main'
+import { useAuthStore } from '../stores/auth'
 
+const authStore = useAuthStore()
 const filename = ref('')
 const content = ref('')
 const files = ref([])
 const error = ref('')
 const uploadedUri = ref('')
 
-const user = { token: currentUser.token, login: currentUser.login, name: currentUser.name }
+const user = { token: authStore.currentUser.token, login: authStore.currentUser.login, name: authStore.currentUser.name }
 
 async function uploadFile() {
   error.value = ''

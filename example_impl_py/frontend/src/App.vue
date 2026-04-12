@@ -8,10 +8,11 @@
         <router-link to="/files">Files</router-link>
         <router-link to="/reactions">Reactions</router-link>
         <router-link to="/status">Status</router-link>
+        <router-link to="/messenger">Messenger</router-link>
         <button @click="logout" class="logout-btn">Logout ({{ currentUser.login }})</button>
       </div>
     </nav>
-    <div class="container">
+    <div :class="['container', { 'full-screen': isMessengerRoute }]">
       <router-view />
     </div>
   </div>
@@ -19,14 +20,18 @@
 
 <script setup>
 import { computed } from 'vue'
-import { useRouter } from 'vue-router'
-import { currentUser, clearCurrentUser } from './main.js'
+import { useRoute, useRouter } from 'vue-router'
+import { useAuthStore } from './stores/auth'
 
+const route = useRoute()
 const router = useRouter()
-const isLoggedIn = computed(() => !!currentUser.token)
+const authStore = useAuthStore()
+const isLoggedIn = computed(() => authStore.isLoggedIn)
+const currentUser = computed(() => authStore.currentUser)
+const isMessengerRoute = computed(() => route.path === '/messenger')
 
 function logout() {
-  clearCurrentUser()
+  authStore.logout()
   router.push('/login')
 }
 </script>
@@ -44,6 +49,7 @@ body { font-family: Arial, sans-serif; background: #f5f5f5; }
 .logout-btn { background: #e74c3c; color: white; border: none; padding: 0.5rem 1rem; border-radius: 4px; cursor: pointer; }
 .logout-btn:hover { background: #c0392b; }
 .container { max-width: 1200px; margin: 2rem auto; padding: 0 1rem; }
+.container.full-screen { max-width: none; margin: 0; padding: 0; height: calc(100vh - 60px); }
 .card { background: white; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); padding: 1.5rem; margin-bottom: 1rem; }
 .card h2 { margin-bottom: 1rem; color: #2c3e50; }
 .form-group { margin-bottom: 1rem; }
