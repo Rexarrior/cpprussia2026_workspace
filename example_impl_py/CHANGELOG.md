@@ -23,6 +23,15 @@ All notable changes to the C++ Russia userver workshop materials.
 - E2E tests for messenger (10 tests, 6 passing)
 - Unit tests for stores (Vitest)
 
+#### Messenger Enhancements (2026-04-12)
+- **Tailwind CSS v3** - Styled UI components (previously unstyled)
+- **Reactions display** - Reactions shown under messages, toggle on hover
+- **Reactions fix** - Now wait for real message_id before enabling reactions (temp IDs don't work with backend)
+- **File upload** - 📎 attachment button in MessageInput, base64 upload
+- **Chat search** - Filter chats by name, "Start chat with X" button
+- **Notifications panel** - 🔔 badge with slide-out panel, real data from backend
+- **Notifications store** - `src/stores/notifications.js` fetches from notifications API
+
 ### Changed
 
 #### API Improvements (based on audit)
@@ -38,6 +47,25 @@ All notable changes to the C++ Russia userver workshop materials.
 - Added status types (online, away, busy, offline) and visibility (public, private)
 - Added base64 format specification for file content
 - Added timestamp format (date-time) specification
+
+### Known Limitations
+
+#### Backend (API constraints)
+- **No user search** - No `/v1/user/search` or `/v1/user/find` endpoint exists
+- **No direct messages** - API is channel-based only (no user-to-user messaging)
+- **In-memory storage** - Data lost on `docker-compose down` or rebuild
+- **No JWT validation** - Tokens are simple 128-char hex strings
+- **No user profile API** - Cannot fetch user info by login
+- **Reactions API limitation** - Backend only tracks reactions count, not which user reacted
+
+#### Frontend
+- **Notifications API limited** - Returns only `{message_id, read}`, no rich context (who/why)
+- **Direct chat creation** - "Start chat with X" button is UI only, not functional
+- **Polling race condition** - Fixed with merge strategy, but can still lose messages under load
+- **Browser cache** - Tailwind CSS may need Ctrl+Shift+R after updates
+
+#### Testing
+- **Status lookup 404** - Returns 404 for users without status set (expected behavior)
 
 ---
 
@@ -147,7 +175,7 @@ All notable changes to the C++ Russia userver workshop materials.
 - Playwright test syntax (require → import)
 - CORS configuration for cross-origin requests
 
-### Known Limitations
+### Known Limitations (General)
 - In-memory storage (data lost on container restart)
 - No persistent database
 - No JWT validation (tokens are simple hex strings)
