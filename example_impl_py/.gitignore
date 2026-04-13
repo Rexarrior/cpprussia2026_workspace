@@ -1,0 +1,14 @@
+# Build artifacts
+dist/
+node_modules/
+
+# Playwright
+.playwright-mcp/
+*.png
+
+# IDE
+.idea/
+.vscode/
+
+# Logs
+*.log
