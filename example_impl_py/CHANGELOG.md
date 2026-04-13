@@ -32,6 +32,13 @@ All notable changes to the C++ Russia userver workshop materials.
 - **Notifications panel** - 🔔 badge with slide-out panel, real data from backend
 - **Notifications store** - `src/stores/notifications.js` fetches from notifications API
 
+#### User-to-User Direct Messaging (2026-04-13)
+- **User search API** - `POST /v1/user/search` in auth-service
+- **Direct messages API** - `POST /v1/direct/get-or-create` and `/v1/direct/list` in messaging-service
+- **Direct channel storage** - `dm_{user1}_{user2}` channel ID format
+- **UserSearchModal** - New component for finding users and starting DMs
+- **Direct chat list** - Shows Channels and Direct Messages sections separately in ChatList
+
 ### Changed
 
 #### API Improvements (based on audit)

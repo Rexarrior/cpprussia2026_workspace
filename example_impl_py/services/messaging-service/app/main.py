@@ -1,7 +1,7 @@
 from contextlib import asynccontextmanager
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from app.router import router as messaging_router
+from app.router import router as messaging_router, direct_router
 from app.config import Settings
 
 settings = Settings()
@@ -28,6 +28,7 @@ app.add_middleware(
 )
 
 app.include_router(messaging_router)
+app.include_router(direct_router)
 
 
 @app.get("/health")

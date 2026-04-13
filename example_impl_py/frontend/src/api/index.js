@@ -21,6 +21,9 @@ export const authApi = {
   login(data) {
     return apiClient.post('/auth/v1/user/authorization', data)
   },
+  searchUsers(query, limit = 10) {
+    return apiClient.post('/auth/v1/user/search', { query, limit })
+  },
 }
 
 export const messagingApi = {
@@ -33,6 +36,18 @@ export const messagingApi = {
       channel_id: channelId,
       from,
       to,
+    })
+  },
+  // Direct messages
+  getOrCreateDirectChat(otherUserLogin, currentUser) {
+    return apiClient.post('/messaging/v1/direct/get-or-create', {
+      current_user: currentUser,
+      other_user_login: otherUserLogin,
+    })
+  },
+  listDirectChats(currentUser) {
+    return apiClient.post('/messaging/v1/direct/list', {
+      current_user: currentUser,
     })
   },
 }

@@ -394,3 +394,116 @@ components:
             properties:
                 status:
                     $ref: '#/components/schemas/V1UserStatus'
+
+        ############## user search ##############
+
+        # POST /v1/user/search
+        V1UserSearchRequest:
+            description: Search for users by login or display name prefix
+            type: object
+            additionalProperties: false
+            required:
+              - query
+            properties:
+                query:
+                    description: Search query (minimum 1 character)
+                    type: string
+                    minLength: 1
+                limit:
+                    description: Maximum number of results (default 10)
+                    type: integer
+                    minimum: 1
+                    maximum: 50
+                    default: 10
+
+        V1UserSearchResponse:
+            type: object
+            additionalProperties: false
+            required:
+              - users
+            properties:
+                users:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/V1PublicUser'
+
+        V1PublicUser:
+            description: Public user information (no sensitive data)
+            type: object
+            additionalProperties: false
+            required:
+              - login
+              - name
+            properties:
+                login:
+                    $ref: '#/components/schemas/V1Login'
+                name:
+                    description: Display name
+                    type: string
+
+        ############## direct messages ##############
+
+        # POST /v1/direct/get-or-create
+        V1DirectGetOrCreateRequest:
+            description: Get or create a direct message channel between current user and another user
+            type: object
+            additionalProperties: false
+            required:
+              - current_user
+              - other_user_login
+            properties:
+                current_user:
+                    $ref: '#/components/schemas/V1CurrentUser'
+                other_user_login:
+                    $ref: '#/components/schemas/V1Login'
+
+        V1DirectGetOrCreateResponse:
+            type: object
+            additionalProperties: false
+            required:
+              - channel_id
+              - other_user
+            properties:
+                channel_id:
+                    description: Direct message channel ID (format: dm_username1_username2)
+                    type: string
+                other_user:
+                    $ref: '#/components/schemas/V1PublicUser'
+
+        # POST /v1/direct/list
+        V1DirectListRequest:
+            description: Get all direct message channels for current user
+            type: object
+            additionalProperties: false
+            required:
+              - current_user
+            properties:
+                current_user:
+                    $ref: '#/components/schemas/V1CurrentUser'
+
+        V1DirectListResponse:
+            type: object
+            additionalProperties: false
+            required:
+              - direct_chats
+            properties:
+                direct_chats:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/V1DirectChatInfo'
+
+        V1DirectChatInfo:
+            description: Information about a direct message chat
+            type: object
+            additionalProperties: false
+            required:
+              - channel_id
+              - other_user
+            properties:
+                channel_id:
+                    type: string
+                other_user:
+                    $ref: '#/components/schemas/V1PublicUser'
+                last_message:
+                    description: Last message in the chat (optional)
+                    $ref: '#/components/schemas/V1ChannelMessage'

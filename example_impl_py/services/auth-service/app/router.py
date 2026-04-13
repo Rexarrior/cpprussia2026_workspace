@@ -6,6 +6,9 @@ from app.schemas import (
     V1Error,
     V1CurrentUser,
     V1AuthorizedUser,
+    V1UserSearchRequest,
+    V1UserSearchResponse,
+    V1PublicUser,
 )
 from app.models import (
     users_db,
@@ -84,3 +87,25 @@ async def authorize(request: V1UserAuthorizationRequest):
     return V1UserAuthorizationResponse(
         current_user=V1AuthorizedUser(token=token, login=user.login, name=user.name)
     )
+
+
+@router.post(
+    "/search",
+    response_model=V1UserSearchResponse,
+    responses={
+        400: {"model": V1Error, "description": "Validation error"},
+    },
+)
+async def search_users(request: V1UserSearchRequest):
+    """Search for users by login or name prefix."""
+    query_lower = request.query.lower()
+    limit = request.limit
+
+    # Find users matching the query (case-insensitive prefix match)
+    matching_users = [
+        V1PublicUser(login=user.login, name=user.name)
+        for user in users_db.values()
+        if query_lower in user.login.lower() or query_lower in user.name.lower()
+    ][:limit]
+
+    return V1UserSearchResponse(users=matching_users)

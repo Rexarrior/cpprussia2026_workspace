@@ -39,3 +39,18 @@ class V1Error(BaseModel):
     code: str
     message: str
     details: Optional[dict] = None
+
+
+# User search schemas
+class V1PublicUser(BaseModel):
+    login: str
+    name: str
+
+
+class V1UserSearchRequest(BaseModel):
+    query: str = Field(..., min_length=1)
+    limit: int = Field(default=10, ge=1, le=50)
+
+
+class V1UserSearchResponse(BaseModel):
+    users: list[V1PublicUser]
