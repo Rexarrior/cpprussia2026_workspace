@@ -28,7 +28,7 @@
 </template>
 
 <script setup>
-import { ref, computed, watch, nextTick } from 'vue'
+import { ref, computed, watch, nextTick, onUnmounted } from 'vue'
 import { useChatsStore } from '@/stores/chats'
 import { useMessagesStore } from '@/stores/messages'
 import MessageBubble from './MessageBubble.vue'
@@ -44,6 +44,7 @@ const props = defineProps({
 const chatsStore = useChatsStore()
 const messagesStore = useMessagesStore()
 const messagesContainer = ref(null)
+let pollingTimer = null
 
 const chatName = computed(() => {
   const chat = chatsStore.chats.find(c => c.id === props.channelId)
@@ -56,13 +57,26 @@ const isDirectMessage = computed(() => {
 })
 
 function viewProfile() {
-  // TODO: Implement profile view
   console.log('View profile for chat:', props.channelId)
 }
 
 const currentMessages = computed(() => {
   return messagesStore.messages[props.channelId] || []
 })
+
+function startPolling() {
+  stopPolling()
+  pollingTimer = setInterval(() => {
+    messagesStore.fetchMessages(props.channelId)
+  }, 5000)
+}
+
+function stopPolling() {
+  if (pollingTimer) {
+    clearInterval(pollingTimer)
+    pollingTimer = null
+  }
+}
 
 watch(
   () => currentMessages.value.length,
@@ -73,12 +87,20 @@ watch(
 
 watch(
   () => props.channelId,
-  async (newId) => {
+  async (newId, oldId) => {
+    if (oldId) {
+      stopPolling()
+    }
     await messagesStore.fetchMessages(newId)
+    startPolling()
     nextTick(() => scrollToBottom())
   },
   { immediate: true }
 )
+
+onUnmounted(() => {
+  stopPolling()
+})
 
 function scrollToBottom() {
   if (messagesContainer.value) {

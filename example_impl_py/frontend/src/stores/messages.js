@@ -17,7 +17,11 @@ export const useMessagesStore = defineStore('messages', () => {
       const name = localStorage.getItem('name')
       const currentUser = { token, login, name }
       
-      const response = await messagingApi.getMessages(channelId, '0', String(Date.now()), currentUser)
+      // Use a date far in the past to get all messages
+      const fromDate = '2000-01-01T00:00:00Z'
+      const toDate = new Date().toISOString()
+      
+      const response = await messagingApi.getMessages(channelId, fromDate, toDate, currentUser)
       const serverMessages = response.data.messages || []
       
       if (!messages[channelId]) {
@@ -27,25 +31,32 @@ export const useMessagesStore = defineStore('messages', () => {
       const mergedMessages = []
       const seenIds = new Set()
       
+      // Keep local messages (with temp IDs or not yet synced)
       for (const msg of messages[channelId]) {
-        const id = msg.message_id || msg.timestamp
+        const id = msg.id || msg.message_id || msg.timestamp
         if (!seenIds.has(id)) {
           seenIds.add(id)
           mergedMessages.push(msg)
         }
       }
       
+      // Add server messages that aren't already in local list
       for (const serverMsg of serverMessages) {
-        const id = serverMsg.message_id
-        if (seenIds.has(id)) {
-          continue
+        const id = serverMsg.id || serverMsg.message_id
+        if (!seenIds.has(id)) {
+          seenIds.add(id)
+          mergedMessages.push(serverMsg)
         }
-        seenIds.add(id)
-        mergedMessages.push(serverMsg)
       }
       
+      // Sort by timestamp
+      mergedMessages.sort((a, b) => {
+        const timeA = new Date(a.timestamp).getTime()
+        const timeB = new Date(b.timestamp).getTime()
+        return timeA - timeB
+      })
+      
       messages[channelId] = mergedMessages
-      startPolling(channelId)
     } catch (error) {
       console.error('Failed to fetch messages:', error)
     }
