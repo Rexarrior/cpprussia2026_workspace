@@ -1,5 +1,5 @@
 from pydantic import BaseModel, Field
-from typing import Optional, List
+from typing import Optional, List, Union
 
 
 class V1Login(BaseModel):
@@ -13,7 +13,7 @@ class V1CurrentUser(BaseModel):
 
 
 class V1ChannelId(BaseModel):
-    channel_id: int
+    channel_id: Union[int, str]
 
 
 class V1MessageId(BaseModel):
@@ -27,7 +27,7 @@ class V1NotificationStatus(BaseModel):
 
 class V1ChannelNotificationListRequest(BaseModel):
     current_user: V1CurrentUser
-    channel_id: int
+    channel_id: Union[int, str]
 
 
 class V1ChannelNotificationListResponse(BaseModel):
@@ -36,7 +36,7 @@ class V1ChannelNotificationListResponse(BaseModel):
 
 class V1ChannelNotificationNewRequest(BaseModel):
     current_user: V1CurrentUser
-    channel_id: int
+    channel_id: Union[int, str]
     message_id: int
     other_user_login: str = Field(..., min_length=3)
 
