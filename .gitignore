@@ -18,3 +18,14 @@ Thumbs.db
 # Node
 node_modules/
 dist/
+
+# Build artifacts
+build/
+*/build/
+*.pid
+
+# Backup files
+*.backup
+
+# Test docker artifacts
+test_docker/

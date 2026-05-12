@@ -1,0 +1,36 @@
+# yaml
+components_manager:
+    task_processors:
+        main-task-processor:
+            worker_threads: 4
+        fs-task-processor:
+            worker_threads: 1
+    default_task_processor: main-task-processor
+
+    components:
+        server:
+            listener:
+                port: 8001
+                task_processor: main-task-processor
+        logging:
+            fs-task-processor: fs-task-processor
+            loggers:
+                default:
+                    file_path: '@stderr'
+                    level: debug
+                    overflow_behavior: discard
+
+        dynamic-config:
+            updates-enabled: false
+            fs-task-processor: fs-task-processor
+            defaults: {}
+
+        # HTTP client and DNS components are added via component_list, no extra config needed
+
+        handler-auth:
+            path: /v1/user/{action}
+            method: POST,GET
+            task_processor: main-task-processor
+            throttling_enabled: false
+    coro_pool:
+        stack_usage_monitor_enabled: false

@@ -1,0 +1,33 @@
+# yaml
+components_manager:
+    task_processors:
+        main-task-processor:
+            worker_threads: 4
+        fs-task-processor:
+            worker_threads: 1
+    default_task_processor: main-task-processor
+
+    components:
+        server:
+            listener:
+                port: 8004
+                task_processor: main-task-processor
+        logging:
+            fs-task-processor: fs-task-processor
+            loggers:
+                default:
+                    file_path: '@stderr'
+                    level: debug
+                    overflow_behavior: discard
+
+        dynamic-config:
+            updates-enabled: false
+            fs-task-processor: fs-task-processor
+            defaults: {}
+
+        handler-files:
+            path: /v1/file/*
+            method: POST,GET
+            task_processor: main-task-processor
+    coro_pool:
+        stack_usage_monitor_enabled: false
